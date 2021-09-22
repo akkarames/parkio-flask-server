@@ -26,9 +26,15 @@ model = load_model()
 @app.route('/prediction', methods=['POST', 'GET'])
 def home():
     # get the data
-    input_data = request.json
+    input_data = request.data
+    input_data = eval(input_data)
+
     if not input_data:
         return jsonify({"result":"Incorrect input data", "error": True})
+
+    if type(input_data) != list:
+        return jsonify({"result":"Incorrect input data", "error": True})
+
     # preprocess the data
     dataset = load_data(input_data)
     prediction = model.predict(dataset)
@@ -36,6 +42,7 @@ def home():
         return jsonify({"result":"Error in Predicting Value", "error": True})
 
     return jsonify({"result":prediction[0], "message": "success"})
+
     
 
 
