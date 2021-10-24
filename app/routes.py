@@ -23,6 +23,7 @@ def load_data(data):
 ## Load Model
 model = load_model()
 
+
 @app.route('/prediction', methods=['POST', 'GET'])
 def home():
     # get the data
@@ -38,10 +39,17 @@ def home():
     # preprocess the data
     dataset = load_data(input_data)
     prediction = model.predict(dataset)
-    if len(prediction) != 1:
+    if len(prediction) == 0:
         return jsonify({"result":"Error in Predicting Value", "error": True})
 
-    return jsonify({"result":prediction[0], "message": "success"})
+    prediction_string = ''
+    for idx, pred in enumerate(prediction):
+        prediction_string += str(idx)+':'+str(pred)+';'
+
+    return jsonify({"result":prediction_string, "message": "success"})
+
+
+
 
     
 
